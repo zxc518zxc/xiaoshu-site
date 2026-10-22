@@ -238,6 +238,17 @@ a.tag:hover { border-color: var(--gold); color: var(--gold); }
 .tag.mark { border-color: var(--gold); color: var(--gold); background: rgba(230,194,120,.1); }
 .boss-badge { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .1em; color: #fff; background: linear-gradient(180deg, #c7533a, #8f2e1c); padding: 1px 8px; border-radius: 999px; }
 .grp-badge { font-family: var(--sans); font-size: 11px; letter-spacing: .1em; color: var(--gold); border: 1px solid var(--gold-dim); padding: 0 8px; border-radius: 999px; }
+/* 獵場頁:每區一張寬卡,每隻怪一列「名稱/等級 | 掉落道具」 */
+.cards.one { grid-template-columns: 1fr; }
+.znote { color: var(--text-soft); font-size: 13.5px; margin: -4px 0 12px; padding: 6px 12px; border-left: 2px solid var(--gold-2); background: rgba(230,194,120,.06); }
+.mhead { display: grid; grid-template-columns: 210px 1fr; gap: 16px; padding: 6px 0; font-size: 12px; letter-spacing: .2em; color: var(--gold-2); border-bottom: 1px solid rgba(201,162,74,.22); }
+.mrow { display: grid; grid-template-columns: 210px 1fr; gap: 16px; padding: 11px 0; border-bottom: 1px solid rgba(201,162,74,.09); align-items: start; }
+.mrow:last-child { border-bottom: 0; padding-bottom: 2px; }
+.mname { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding-top: 2px; }
+.mname a { font-weight: 700; font-size: 15.5px; color: var(--text); }
+.mname a:hover, .mname a.mark { color: var(--gold); }
+.mname .lv { font-size: 12.5px; color: var(--text-faint); }
+.mrow .none { color: var(--text-faint); font-size: 13px; padding-top: 3px; }
 .empty { text-align: center; color: var(--text-faint); padding: 40px 0; }
 .data-note { margin-top: 30px; color: var(--text-faint); font-size: 13px; line-height: 1.9; border-top: 1px solid rgba(201,162,74,.12); padding-top: 18px; }
 
@@ -261,6 +272,8 @@ a.tag:hover { border-color: var(--gold); color: var(--gold); }
   .page-hero { padding: 96px 0 34px; }
   .cards { grid-template-columns: 1fr; }
   .stats b { font-size: 14px; }
+  .mhead { display: none; }
+  .mrow { grid-template-columns: 1fr; gap: 6px; }
 }
 @media (max-width: 480px) {
   .features, .links { grid-template-columns: 1fr; }

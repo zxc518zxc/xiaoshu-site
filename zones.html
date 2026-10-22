@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>獵場列表|小樹放置天堂</title>
-<meta name="description" content="小樹放置天堂目前開放的野外與地監，每一區出沒的怪物與等級。">
+<meta name="description" content="小樹放置天堂目前開放的野外與地監，每一區的怪物與掉落道具。">
 <meta name="theme-color" content="#0d0a06">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0a06'/%3E%3Ccircle cx='32' cy='26' r='17' fill='%23c9a24a'/%3E%3Crect x='28' y='38' width='8' height='18' rx='3' fill='%238a5a34'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +39,7 @@
       <div class="en">HUNTING GROUNDS</div>
       <h1>獵場列表</h1>
       <svg class="orn"><use href="#orn"/></svg>
-      <p>目前開放的野外與地監，每一區出沒的怪物與等級</p>
+      <p>目前開放的野外與地監，每一區的怪物與掉落道具一次看完</p>
     </div>
     <div class="subtabs"><a href="zones.html" class="on">獵場列表</a><a href="monsters.html">怪物掉落</a></div>
   </div>
@@ -50,7 +50,7 @@
     <div class="toolbar">
       <label class="search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-        <input id="q" type="search" placeholder="搜尋獵場名，或輸入怪物名找牠在哪裡" autocomplete="off">
+        <input id="q" type="search" placeholder="搜尋獵場、怪物或道具名(例:精靈玉)" autocomplete="off">
       </label>
       <div class="chips" id="chips"></div>
     </div>
@@ -86,17 +86,28 @@
 
   function hasBoss(z) { return z.m.some(function (n) { return W.mobs[n] && W.mobs[n].boss; }); }
 
+  // 麥哥 10/22:「狩獵區 怪物名稱 掉落道具 不要點進去才看的到 都直接列出來」⇒ 每隻怪一列:名稱/等級 | 掉落道具
+  function mobMatch(n) {
+    var m = W.mobs[n];
+    return n.indexOf(state.q) >= 0 || m.d.some(function (d) { return d.indexOf(state.q) >= 0; });
+  }
   function card(z) {
-    var mobHit = state.q && z.n.indexOf(state.q) < 0;
-    var tags = z.m.map(function (n) {
+    // 搜尋字不是獵場名 ⇒ 只留有關的怪(怪名或掉落含搜尋字),並把命中的字標亮
+    var narrow = state.q && z.n.indexOf(state.q) < 0;
+    var rows = z.m.filter(function (n) { return !narrow || mobMatch(n); }).map(function (n) {
       var m = W.mobs[n];
-      var cls = 'tag' + (m.boss ? ' boss' : '') + (mobHit && n.indexOf(state.q) >= 0 ? ' mark' : '');
-      return '<a class="' + cls + '" href="monsters.html#m=' + encodeURIComponent(n) + '">' + esc(n) + ' <span class="lv">Lv' + esc(m.lvs) + '</span></a>';
+      var drops = m.d.length ? m.d.map(function (d) {
+        return '<span class="tag' + (narrow && d.indexOf(state.q) >= 0 ? ' mark' : '') + '">' + esc(d) + '</span>';
+      }).join('') : '<span class="none">無掉落道具</span>';
+      return '<div class="mrow"><div class="mname"><a href="monsters.html#m=' + encodeURIComponent(n) + '"' + (narrow && n.indexOf(state.q) >= 0 ? ' class="mark"' : '') + '>' + esc(n) + '</a>' +
+        '<span class="lv">Lv ' + esc(m.lvs) + '</span>' + (m.boss ? '<span class="boss-badge">BOSS</span>' : '') + '</div>' +
+        '<div class="tags">' + drops + '</div></div>';
     }).join('');
-    return '<div class="dcard" id="z-' + esc(z.id) + '">' +
+    return '<div class="dcard zone" id="z-' + esc(z.id) + '">' +
       '<h3>' + esc(z.n) + ' <span class="grp-badge">' + esc(z.g) + '</span>' + (hasBoss(z) ? ' <span class="boss-badge">BOSS</span>' : '') + '</h3>' +
       '<div class="meta">怪物等級 <b>' + (z.lo === z.hi ? z.lo : z.lo + '~' + z.hi) + '</b>・' + z.m.length + ' 種怪物</div>' +
-      '<div class="tags">' + tags + '</div></div>';
+      (z.note ? '<div class="znote">' + esc(z.note) + '</div>' : '') +
+      '<div class="mhead"><span>怪物</span><span>掉落道具</span></div>' + rows + '</div>';
   }
 
   function render() {
@@ -104,18 +115,18 @@
     var zs = W.zones.filter(function (z) {
       if (state.f === 'boss' ? !hasBoss(z) : (state.f !== 'all' && z.g !== state.f)) return false;
       if (!state.q) return true;
-      return z.n.indexOf(state.q) >= 0 || z.m.some(function (n) { return n.indexOf(state.q) >= 0; });
+      return z.n.indexOf(state.q) >= 0 || z.m.some(mobMatch);
     });
     document.getElementById('note').textContent = '找到 ' + zs.length + ' 個獵場' + (state.q ? '(含「' + state.q + '」)' : '');
     if (!zs.length) { list.innerHTML = '<p class="empty">找不到符合的獵場</p>'; return; }
     list.innerHTML = GROUPS.map(function (g) {
       var part = zs.filter(function (z) { return z.g === g; });
       if (!part.length) return '';
-      return '<div class="group-hd">' + g + ' <small>' + part.length + ' 區</small></div><div class="cards">' + part.map(card).join('') + '</div>';
+      return '<div class="group-hd">' + g + ' <small>' + part.length + ' 區</small></div><div class="cards one">' + part.map(card).join('') + '</div>';
     }).join('');
   }
 
-  document.getElementById('foot').innerHTML = '資料更新於 ' + esc(W.at) + '，只列目前開放的區域；之後開放新區域會再更新。<br>同一區的怪物依等級由低到高排列，點怪物名可以看牠的能力與掉落。';
+  document.getElementById('foot').innerHTML = '資料更新於 ' + esc(W.at) + '，只列目前開放的區域；之後開放新區域會再更新。<br>同一區的怪物依等級由低到高排列；掉落道具只列出「會掉什麼」，掉落機率不公開。點怪物名可以看牠的 HP、AC、經驗與其他出沒地點。';
   render();
 
   // 從怪物頁點「出沒地點」過來:#z=獵場代號 → 捲到那張卡並標亮
