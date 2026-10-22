@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>變身與娃娃|小樹放置天堂</title>
+<meta name="description" content="小樹放置天堂目前開放的變身卡、魔法娃娃與收藏套組:每張卡的能力、變身能拿的武器、收藏加成。">
+<meta name="theme-color" content="#0d0a06">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0a06'/%3E%3Ccircle cx='32' cy='26' r='17' fill='%23c9a24a'/%3E%3Crect x='28' y='38' width='8' height='18' rx='3' fill='%238a5a34'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="orn" viewBox="0 0 220 14"><path d="M0 7h92M128 7h92" stroke="#b98d3e" stroke-width="1"/><path d="M110 1l6 6-6 6-6-6z" fill="none" stroke="#e6c278" stroke-width="1.2"/><circle cx="96" cy="7" r="1.6" fill="#b98d3e"/><circle cx="124" cy="7" r="1.6" fill="#b98d3e"/></symbol>
+  </defs>
+</svg>
+
+<nav class="nav" id="nav"></nav>
+<script src="nav.js"></script>
+
+<header class="page-hero">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="en">POLYMORPH &amp; DOLLS</div>
+      <h1>變身與娃娃</h1>
+      <svg class="orn"><use href="#orn"/></svg>
+      <p>每張變身卡、魔法娃娃的能力,變身能拿什麼武器,以及收藏套組的永久加成</p>
+    </div>
+    <div class="subtabs" id="tabs"></div>
+  </div>
+</header>
+
+<main class="data-sec">
+  <div class="wrap">
+    <div class="howto" id="howto"></div>
+    <div class="toolbar">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="q" type="search" placeholder="搜尋卡片名稱或能力,例如:攻擊速度、經驗" autocomplete="off">
+      </label>
+      <div class="chips" id="chips"></div>
+      <div class="chips" id="wchips"></div>
+    </div>
+    <p class="result-note" id="note"></p>
+    <div class="cards cards-sm" id="list"></div>
+    <div class="data-note" id="foot"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap"><span class="brand">小樹放置天堂</span>© 2026 小樹放置天堂 版權所有</div>
+</footer>
+
+<script src="data/cards.js"></script>
+<script>
+(function () {
+  var C = window.CARDS;
+  var list = document.getElementById('list');
+  if (!C) { list.innerHTML = '<p class="empty">資料載入失敗,請重新整理頁面。</p>'; return; }
+  var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
+  var TABS = [['poly', '變身卡', C.poly.length], ['doll', '魔法娃娃', C.doll.length], ['sets', '收藏', C.sets.length]];
+  var WPN = { melee: ['近戰武器', '不能拿弓'], bow: ['只能拿弓', '不能拿近戰武器'], all: ['不限武器', '弓、近戰都可以'] };
+  var HOWTO = {
+    poly: '<b>怎麼用:</b>在卡片圖鑑點變身卡的「立刻變身」,消耗 1 張變形卷軸,變身 30 分鐘,期間獲得下面列的能力。' +
+      '<br><b>⚔ 武器限制:</b>每張變身能拿的武器不一樣——<span class="wb melee">近戰武器</span>的變身<b>不能拿弓</b>,<span class="wb bow">只能拿弓</span>的變身<b>不能拿劍、匕首等近戰武器</b>。' +
+      '變身時手上的武器不合,會自動收回背包,變身期間也裝不上。弓手職業(妖精)請挑「只能拿弓」或「不限武器」的變身。',
+    doll: '<b>怎麼用:</b>在卡片圖鑑的魔法娃娃頁按「召喚娃娃」,消耗 1 張娃娃召喚卷,娃娃跟隨 30 分鐘,期間獲得下面列的能力;同時只能帶 1 隻。娃娃不佔寵物的魅力名額。',
+    sets: '<b>怎麼用:</b>一組收藏裡的卡你<b>都抽到過</b>(解鎖過),就永久獲得該組加成,不會扣卡,也不用變身或召喚。變身收藏看變身卡、娃娃收藏看娃娃卡。'
+  };
+  var state = { tab: 'poly', g: 0, w: '', q: '' };
+
+  var tabs = document.getElementById('tabs');
+  tabs.innerHTML = TABS.map(function (t) { return '<a href="#' + t[0] + '" data-t="' + t[0] + '">' + t[1] + '<small> ' + t[2] + '</small></a>'; }).join('');
+  tabs.addEventListener('click', function (e) {
+    var a = e.target.closest('a'); if (!a) return;
+    e.preventDefault(); state.tab = a.dataset.t; state.w = ''; history.replaceState(null, '', '#' + state.tab); render();
+  });
+  var chips = document.getElementById('chips');
+  var gs = [[0, '全部']].concat(Object.keys(C.grades).map(function (k) { return [+k, C.grades[k].n]; }));
+  chips.innerHTML = gs.map(function (g) { return '<button class="chip" data-g="' + g[0] + '">' + g[1] + '</button>'; }).join('');
+  chips.addEventListener('click', function (e) { var b = e.target.closest('.chip'); if (!b) return; state.g = +b.dataset.g; render(); });
+  var wchips = document.getElementById('wchips');
+  wchips.innerHTML = [['', '所有武器'], ['melee', '近戰武器'], ['bow', '只能拿弓'], ['all', '不限武器']]
+    .map(function (w) { return '<button class="chip" data-w="' + w[0] + '">' + w[1] + '</button>'; }).join('');
+  wchips.addEventListener('click', function (e) { var b = e.target.closest('.chip'); if (!b) return; state.w = b.dataset.w; render(); });
+  var q = document.getElementById('q');
+  q.addEventListener('input', function () { state.q = q.value.trim(); render(); });
+
+  function gpill(g) { var x = C.grades[g] || { n: '', c: '#999' }; return '<span class="gpill" style="--gc:' + x.c + '">' + esc(x.n) + '</span>'; }
+  function attrs(a) { return '<div class="tags">' + a.map(function (s) { return '<span class="tag' + (state.q && s.indexOf(state.q) >= 0 ? ' mark' : '') + '">' + esc(s) + '</span>'; }).join('') + '</div>'; }
+  function card(x) {
+    var h = '<div class="dcard"><h3>' + esc(x.n) + gpill(x.g);
+    if (state.tab === 'poly') h += '<span class="wb ' + x.w + '" title="' + WPN[x.w][1] + '">' + WPN[x.w][0] + '</span>';
+    if (state.tab === 'sets') h += '<span class="grp-badge">' + (x.d === 'poly' ? '變身收藏' : '娃娃收藏') + '</span>';
+    h += '</h3>';
+    if (state.tab === 'poly') h += '<div class="meta">' + WPN[x.w][1] + '</div>';
+    if (state.tab === 'sets') h += '<div class="lbl">需要的卡</div><div class="tags">' + x.c.map(function (n) { return '<span class="tag">' + esc(n) + '</span>'; }).join('') + '</div><div class="lbl">收藏加成</div>';
+    else h += '<div class="lbl">' + (state.tab === 'poly' ? '變身中能力' : '召喚中能力') + '</div>';
+    return h + attrs(x.a) + '</div>';
+  }
+  function render() {
+    tabs.querySelectorAll('a').forEach(function (a) { a.classList.toggle('on', a.dataset.t === state.tab); });
+    chips.querySelectorAll('.chip').forEach(function (b) { b.classList.toggle('on', +b.dataset.g === state.g); });
+    wchips.style.display = state.tab === 'poly' ? '' : 'none';
+    wchips.querySelectorAll('.chip').forEach(function (b) { b.classList.toggle('on', b.dataset.w === state.w); });
+    document.getElementById('howto').innerHTML = HOWTO[state.tab];
+    var src = C[state.tab];
+    var xs = src.filter(function (x) {
+      if (state.g && x.g !== state.g) return false;
+      if (state.tab === 'poly' && state.w && x.w !== state.w) return false;
+      if (!state.q) return true;
+      return x.n.indexOf(state.q) >= 0 || x.a.some(function (s) { return s.indexOf(state.q) >= 0; }) || (x.c || []).some(function (n) { return n.indexOf(state.q) >= 0; });
+    });
+    var unit = state.tab === 'sets' ? ' 組收藏' : ' 張';
+    document.getElementById('note').textContent = '找到 ' + xs.length + unit;
+    list.innerHTML = xs.length ? xs.map(card).join('') : '<p class="empty">找不到符合的卡片</p>';
+  }
+  document.getElementById('foot').innerHTML = '資料更新於 ' + esc(C.at) + ',只列目前遊戲裡已開放的卡片與集得齊的收藏;之後開放的新卡會陸續補上。<br>' +
+    '卡片是打開「變身卡包」「魔法娃娃卡包」抽到的;同等級的卡湊滿張數可以合成更高等級。抽卡與合成機率不公開。<br>' +
+    '新手送的變形卷軸(死亡騎士)只能拿近戰武器(也不能拿矛),變形卷軸(黑暗精靈)只能拿弓。';
+  var h = location.hash.replace('#', '');
+  if (h === 'doll' || h === 'sets') state.tab = h;
+  render();
+})();
+</script>
+</body>
+</html>

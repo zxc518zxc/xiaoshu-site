@@ -261,6 +261,17 @@ a.tag:hover { border-color: var(--gold); color: var(--gold); }
 .tag.mark { border-color: var(--gold); color: var(--gold); background: rgba(230,194,120,.1); }
 .boss-badge { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .1em; color: #fff; background: linear-gradient(180deg, #c7533a, #8f2e1c); padding: 1px 8px; border-radius: 999px; }
 .grp-badge { font-family: var(--sans); font-size: 11px; letter-spacing: .1em; color: var(--gold); border: 1px solid var(--gold-dim); padding: 0 8px; border-radius: 999px; }
+/* 變身與娃娃頁 */
+.cards-sm { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.subtabs a small { font-size: 12px; opacity: .75; letter-spacing: 0; }
+.gpill { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--gc); border: 1px solid var(--gc); padding: 0 8px; border-radius: 999px; background: rgba(13,10,6,.6); }
+.wb { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .08em; padding: 1px 8px; border-radius: 4px; white-space: nowrap; }
+.wb.melee { color: #f3c9a8; background: rgba(176,92,46,.28); border: 1px solid rgba(214,128,74,.55); }
+.wb.bow { color: #b9e3a6; background: rgba(70,130,52,.28); border: 1px solid rgba(118,186,92,.55); }
+.wb.all { color: #cfd8f3; background: rgba(80,98,150,.28); border: 1px solid rgba(132,152,214,.55); }
+.howto { margin: 0 0 20px; padding: 16px 20px; line-height: 1.9; font-size: 15px; color: var(--text-soft); background: linear-gradient(180deg, #1b140c, #120d07); border: 1px solid rgba(201,162,74,.22); border-left: 3px solid var(--gold); border-radius: 6px; }
+.howto b { color: var(--gold); }
+#wchips { margin-top: 2px; }
 /* 獵場頁:每區一張寬卡,每隻怪一列「名稱/等級 | 掉落道具」 */
 .cards.one { grid-template-columns: 1fr; }
 .znote { color: var(--text-soft); font-size: 13.5px; margin: -4px 0 12px; padding: 6px 12px; border-left: 2px solid var(--gold-2); background: rgba(230,194,120,.06); }

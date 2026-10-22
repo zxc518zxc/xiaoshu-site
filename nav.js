@@ -8,6 +8,7 @@
       ['系統介紹', 'systems.html'],
       ['技能介紹', 'skills.html'],
       ['裝備強化', 'enhance.html'],
+      ['變身與娃娃', 'cards.html'],
       ['召喚與寵物', 'pets.html'],
       ['獵場列表', 'zones.html'],
       ['怪物掉落', 'monsters.html'],
