@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>獵場列表|小樹放置天堂</title>
+<meta name="description" content="小樹放置天堂目前開放的野外與地監，每一區出沒的怪物與等級。">
+<meta name="theme-color" content="#0d0a06">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0a06'/%3E%3Ccircle cx='32' cy='26' r='17' fill='%23c9a24a'/%3E%3Crect x='28' y='38' width='8' height='18' rx='3' fill='%238a5a34'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="orn" viewBox="0 0 220 14"><path d="M0 7h92M128 7h92" stroke="#b98d3e" stroke-width="1"/><path d="M110 1l6 6-6 6-6-6z" fill="none" stroke="#e6c278" stroke-width="1.2"/><circle cx="96" cy="7" r="1.6" fill="#b98d3e"/><circle cx="124" cy="7" r="1.6" fill="#b98d3e"/></symbol>
+  </defs>
+</svg>
+
+<nav class="nav solid-always">
+  <div class="wrap">
+    <a class="brand" href="index.html">小樹放置天堂</a>
+    <div class="nav-links">
+      <a href="index.html#features">遊戲特色</a>
+      <a href="zones.html" class="on">獵場列表</a>
+      <a href="monsters.html">怪物掉落</a>
+      <a href="index.html#join">加入社群</a>
+    </div>
+    <a class="btn btn-gold" href="https://test.xiaoshu.gg/play/" target="_blank" rel="noopener">進入遊戲</a>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="en">HUNTING GROUNDS</div>
+      <h1>獵場列表</h1>
+      <svg class="orn"><use href="#orn"/></svg>
+      <p>目前開放的野外與地監，每一區出沒的怪物與等級</p>
+    </div>
+    <div class="subtabs"><a href="zones.html" class="on">獵場列表</a><a href="monsters.html">怪物掉落</a></div>
+  </div>
+</header>
+
+<main class="data-sec">
+  <div class="wrap">
+    <div class="toolbar">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="q" type="search" placeholder="搜尋獵場名，或輸入怪物名找牠在哪裡" autocomplete="off">
+      </label>
+      <div class="chips" id="chips"></div>
+    </div>
+    <p class="result-note" id="note"></p>
+    <div id="list"></div>
+    <div class="data-note" id="foot"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap"><span class="brand">小樹放置天堂</span>© 2026 小樹放置天堂 版權所有</div>
+</footer>
+
+<script src="data/wiki.js"></script>
+<script>
+(function () {
+  var W = window.WIKI;
+  var list = document.getElementById('list');
+  if (!W) { list.innerHTML = '<p class="empty">資料載入失敗，請重新整理頁面。</p>'; return; }
+  var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
+  var GROUPS = ['說話之島', '大陸野外', '地監'];
+  var FILTERS = [['all', '全部']].concat(GROUPS.map(function (g) { return [g, g]; })).concat([['boss', '有 BOSS']]);
+  var state = { f: 'all', q: '' };
+
+  var chips = document.getElementById('chips');
+  chips.innerHTML = FILTERS.map(function (f) { return '<button class="chip" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('');
+  chips.addEventListener('click', function (e) {
+    var b = e.target.closest('.chip'); if (!b) return;
+    state.f = b.dataset.f; render();
+  });
+  var q = document.getElementById('q');
+  q.addEventListener('input', function () { state.q = q.value.trim(); render(); });
+
+  function hasBoss(z) { return z.m.some(function (n) { return W.mobs[n] && W.mobs[n].boss; }); }
+
+  function card(z) {
+    var mobHit = state.q && z.n.indexOf(state.q) < 0;
+    var tags = z.m.map(function (n) {
+      var m = W.mobs[n];
+      var cls = 'tag' + (m.boss ? ' boss' : '') + (mobHit && n.indexOf(state.q) >= 0 ? ' mark' : '');
+      return '<a class="' + cls + '" href="monsters.html#m=' + encodeURIComponent(n) + '">' + esc(n) + ' <span class="lv">Lv' + esc(m.lvs) + '</span></a>';
+    }).join('');
+    return '<div class="dcard" id="z-' + esc(z.id) + '">' +
+      '<h3>' + esc(z.n) + ' <span class="grp-badge">' + esc(z.g) + '</span>' + (hasBoss(z) ? ' <span class="boss-badge">BOSS</span>' : '') + '</h3>' +
+      '<div class="meta">怪物等級 <b>' + (z.lo === z.hi ? z.lo : z.lo + '~' + z.hi) + '</b>・' + z.m.length + ' 種怪物</div>' +
+      '<div class="tags">' + tags + '</div></div>';
+  }
+
+  function render() {
+    chips.querySelectorAll('.chip').forEach(function (b) { b.classList.toggle('on', b.dataset.f === state.f); });
+    var zs = W.zones.filter(function (z) {
+      if (state.f === 'boss' ? !hasBoss(z) : (state.f !== 'all' && z.g !== state.f)) return false;
+      if (!state.q) return true;
+      return z.n.indexOf(state.q) >= 0 || z.m.some(function (n) { return n.indexOf(state.q) >= 0; });
+    });
+    document.getElementById('note').textContent = '找到 ' + zs.length + ' 個獵場' + (state.q ? '(含「' + state.q + '」)' : '');
+    if (!zs.length) { list.innerHTML = '<p class="empty">找不到符合的獵場</p>'; return; }
+    list.innerHTML = GROUPS.map(function (g) {
+      var part = zs.filter(function (z) { return z.g === g; });
+      if (!part.length) return '';
+      return '<div class="group-hd">' + g + ' <small>' + part.length + ' 區</small></div><div class="cards">' + part.map(card).join('') + '</div>';
+    }).join('');
+  }
+
+  document.getElementById('foot').innerHTML = '資料更新於 ' + esc(W.at) + '，只列目前開放的區域；之後開放新區域會再更新。<br>同一區的怪物依等級由低到高排列，點怪物名可以看牠的能力與掉落。';
+  render();
+
+  // 從怪物頁點「出沒地點」過來:#z=獵場代號 → 捲到那張卡並標亮
+  function fromHash() {
+    var m = location.hash.match(/^#z=(.+)$/);
+    if (!m) return;
+    state.f = 'all'; state.q = ''; q.value = ''; render();
+    var el = document.getElementById('z-' + decodeURIComponent(m[1]));
+    if (el) { el.classList.add('hit'); el.scrollIntoView({ block: 'center' }); }
+  }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+})();
+</script>
+</body>
+</html>

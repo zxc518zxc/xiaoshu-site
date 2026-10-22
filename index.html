@@ -15,202 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/hero.webp" media="(min-width: 721px)">
 <link rel="preload" as="image" href="img/hero-m.webp" media="(max-width: 720px)">
-<style>
-  :root {
-    --bg: #0d0a06;
-    --bg-2: #15100a;
-    --panel: rgba(24, 18, 11, .82);
-    --gold: #e6c278;
-    --gold-2: #b98d3e;
-    --gold-dim: rgba(201, 162, 74, .38);
-    --text: #ece0c6;
-    --text-soft: #b3a281;
-    --text-faint: #7f7159;
-    --serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
-    --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0; background: var(--bg); color: var(--text);
-    font-family: var(--sans); font-size: 16px; line-height: 1.8;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: inherit; text-decoration: none; }
-  img { display: block; max-width: 100%; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-
-  /* ── 上方導覽列 ── */
-  .nav {
-    position: fixed; inset: 0 0 auto; z-index: 10; height: 64px;
-    display: flex; align-items: center; transition: background .3s, border-color .3s;
-    border-bottom: 1px solid transparent;
-  }
-  .nav.solid { background: rgba(13, 10, 6, .9); backdrop-filter: blur(8px); border-color: rgba(201,162,74,.18); }
-  .nav .wrap { width: 100%; display: flex; align-items: center; gap: 28px; }
-  .brand { font-family: var(--serif); font-weight: 900; font-size: 20px; letter-spacing: .12em; color: var(--gold); margin-right: auto; }
-  .nav-links { display: flex; gap: 26px; font-size: 15px; color: var(--text-soft); }
-  .nav-links a:hover { color: var(--gold); }
-  .nav .btn { padding: 8px 20px; font-size: 14px; }
-
-  /* ── 按鈕 ── */
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 14px 34px; border-radius: 4px; font-weight: 700; letter-spacing: .12em;
-    transition: transform .15s, box-shadow .2s, background .2s;
-  }
-  .btn-gold {
-    color: #1d1407;
-    background: linear-gradient(180deg, #f6dc9c 0%, #d9ad55 48%, #b5873a 100%);
-    box-shadow: 0 0 0 1px #8c6526 inset, 0 6px 24px rgba(214, 168, 80, .28);
-  }
-  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px #8c6526 inset, 0 10px 32px rgba(214, 168, 80, .45); }
-  .btn-ghost { color: var(--gold); border: 1px solid var(--gold-dim); background: rgba(13,10,6,.45); }
-  .btn-ghost:hover { border-color: var(--gold); background: rgba(13,10,6,.7); }
-
-  /* ── 主視覺 ── */
-  .hero {
-    position: relative; min-height: 100vh; min-height: 100svh;
-    display: flex; align-items: center; justify-content: center; text-align: center;
-    background: url(img/hero.webp) center 35% / cover no-repeat;
-    padding: 96px 0 120px;
-  }
-  .hero::before {
-    content: ""; position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse at 50% 42%, rgba(13,10,6,.15) 0%, rgba(13,10,6,.55) 70%),
-      linear-gradient(180deg, rgba(13,10,6,.55) 0%, rgba(13,10,6,0) 22%, rgba(13,10,6,0) 60%, var(--bg) 100%);
-  }
-  .hero > .wrap { position: relative; }
-  .logo { width: min(560px, 86vw); margin: 0 auto; filter: drop-shadow(0 10px 30px rgba(0,0,0,.7)); }
-  .status {
-    display: inline-flex; align-items: center; gap: 10px; margin: 22px 0 14px;
-    padding: 4px 16px; border: 1px solid var(--gold-dim); border-radius: 999px;
-    background: rgba(13,10,6,.55); color: var(--gold); font-size: 14px; letter-spacing: .2em;
-  }
-  .status i { width: 8px; height: 8px; border-radius: 50%; background: #6fd08c; box-shadow: 0 0 10px #6fd08c; }
-  .tagline {
-    font-family: var(--serif); font-weight: 600; font-size: clamp(19px, 2.6vw, 26px);
-    letter-spacing: .14em; margin: 0 0 6px; text-shadow: 0 2px 12px rgba(0,0,0,.85);
-  }
-  .tagline-2 { color: var(--text-soft); margin: 0 0 34px; text-shadow: 0 2px 10px rgba(0,0,0,.9); }
-  .cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  .scroll-cue {
-    position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%);
-    color: var(--text-faint); font-size: 12px; letter-spacing: .3em; text-align: center;
-  }
-  .scroll-cue::after {
-    content: ""; display: block; width: 1px; height: 36px; margin: 8px auto 0;
-    background: linear-gradient(var(--gold), transparent); animation: drip 2s ease-in-out infinite;
-  }
-  @keyframes drip { 0%,100% { opacity: .3; transform: scaleY(.6); transform-origin: top; } 50% { opacity: 1; transform: scaleY(1); } }
-
-  /* ── 區塊標題 ── */
-  section { padding: 96px 0; position: relative; }
-  .sec-head { text-align: center; margin-bottom: 52px; }
-  .sec-head .en { font-size: 12px; letter-spacing: .5em; color: var(--gold-2); margin-bottom: 6px; }
-  .sec-head h2 {
-    font-family: var(--serif); font-weight: 900; font-size: clamp(28px, 4vw, 38px);
-    letter-spacing: .16em; margin: 0; color: var(--gold);
-    background: linear-gradient(180deg, #f7e3b0, #c99b4c); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .sec-head p { color: var(--text-soft); margin: 10px 0 0; }
-  .orn { display: block; width: 220px; height: 14px; margin: 14px auto 0; }
-
-  /* ── 遊戲特色 ── */
-  .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-  .feat {
-    position: relative; padding: 34px 26px 30px; background: linear-gradient(180deg, #1b140c, #120d07);
-    border: 1px solid rgba(201,162,74,.22);
-    transition: border-color .2s, transform .2s;
-  }
-  .feat::before, .feat::after {
-    content: ""; position: absolute; width: 14px; height: 14px; border: 2px solid var(--gold-2);
-  }
-  .feat::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
-  .feat::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
-  .feat:hover { border-color: rgba(230,194,120,.55); transform: translateY(-4px); }
-  .feat .no { font-family: var(--serif); font-weight: 900; font-size: 44px; line-height: 1; color: rgba(201,162,74,.22); position: absolute; top: 18px; right: 20px; }
-  .feat svg { width: 40px; height: 40px; color: var(--gold); margin-bottom: 18px; }
-  .feat h3 { font-family: var(--serif); font-size: 21px; letter-spacing: .12em; margin: 0 0 8px; color: var(--text); }
-  .feat p { margin: 0; color: var(--text-soft); font-size: 15px; }
-
-  /* ── 職業 ── */
-  .classes-sec { background: radial-gradient(ellipse at 50% 0%, rgba(185,141,62,.12), transparent 60%), var(--bg-2); border-top: 1px solid rgba(201,162,74,.12); border-bottom: 1px solid rgba(201,162,74,.12); }
-  .classes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-  .cls { text-align: center; padding: 10px 12px; }
-  .seal {
-    width: 112px; height: 112px; margin: 0 auto 18px; border-radius: 50%; display: grid; place-items: center;
-    font-family: var(--serif); font-weight: 900; font-size: 46px; color: var(--gold);
-    background: radial-gradient(circle at 50% 35%, #2a1f12, #120d07 70%);
-    box-shadow: 0 0 0 1px var(--gold-2), 0 0 0 6px #120d07, 0 0 0 7px rgba(201,162,74,.35), 0 12px 30px rgba(0,0,0,.6);
-    transition: box-shadow .25s, color .25s;
-  }
-  .cls:hover .seal { color: #fff3d0; box-shadow: 0 0 0 1px var(--gold), 0 0 0 6px #120d07, 0 0 0 7px var(--gold), 0 0 34px rgba(230,194,120,.35); }
-  .cls h3 { font-family: var(--serif); font-size: 22px; letter-spacing: .3em; margin: 0 0 6px; text-indent: .3em; }
-  .cls p { color: var(--text-soft); margin: 0; font-size: 15px; }
-
-  /* ── 社群 ── */
-  .join { background: url(img/hall.webp) center / cover no-repeat; }
-  .join::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--bg-2) 0%, rgba(13,10,6,.82) 18%, rgba(13,10,6,.86) 82%, var(--bg) 100%); }
-  .join > .wrap { position: relative; }
-  .links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  .link {
-    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px;
-    padding: 30px 18px 26px; background: var(--panel); backdrop-filter: blur(4px);
-    border: 1px solid rgba(201,162,74,.28); border-radius: 6px;
-    transition: border-color .2s, transform .2s, box-shadow .2s;
-  }
-  .link:hover { border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,.5), 0 0 24px rgba(230,194,120,.12); }
-  .link .ic { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 10px; color: #fff; }
-  .link .ic svg { width: 28px; height: 28px; }
-  .ic.play { background: linear-gradient(180deg, #f6dc9c, #b5873a); color: #1d1407; }
-  .ic.fb { background: #1877f2; }
-  .ic.line { background: #06c755; }
-  .link .tt { font-family: var(--serif); font-size: 19px; font-weight: 600; letter-spacing: .1em; color: var(--text); }
-  .link .dd { font-size: 13px; color: var(--text-soft); }
-  .link .go { margin-top: 12px; font-size: 13px; color: var(--gold); letter-spacing: .15em; }
-  .link.featured { border-color: rgba(230,194,120,.7); background: linear-gradient(180deg, rgba(58,42,18,.9), rgba(24,18,11,.9)); }
-  .badge { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .1em; color: #1d1407; background: var(--gold); padding: 1px 8px; border-radius: 999px; vertical-align: 3px; margin-left: 4px; }
-  .lineid { font-family: Consolas, monospace; color: var(--gold); }
-
-  .disclaimer {
-    margin-top: 36px; padding: 22px 26px; border: 1px solid rgba(201,162,74,.16);
-    background: rgba(13,10,6,.7); font-size: 13px; color: var(--text-faint); line-height: 2;
-  }
-  .disclaimer b { color: var(--text-soft); font-size: 14px; letter-spacing: .15em; }
-
-  footer { padding: 34px 0 44px; text-align: center; color: var(--text-faint); font-size: 13px; letter-spacing: .1em; border-top: 1px solid rgba(201,162,74,.12); }
-  footer .brand { display: block; margin: 0 0 6px; font-size: 18px; }
-
-  /* ── 平板/手機 ── */
-  @media (max-width: 960px) {
-    .features, .classes, .links { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 720px) {
-    .nav-links { display: none; }
-    .hero { background-image: url(img/hero-m.webp); background-position: center 30%; padding: 84px 0 96px; }
-    .logo { width: min(250px, 66vw); }
-    .status { margin-top: 14px; }
-    section { padding: 72px 0; }
-    .wrap { padding: 0 16px; }
-    .btn { padding: 13px 26px; }
-    .cta .btn { flex: 1 1 100%; max-width: 320px; }
-    .classes { gap: 28px 12px; }
-    .seal { width: 92px; height: 92px; font-size: 38px; }
-  }
-  @media (max-width: 480px) {
-    .features, .links { grid-template-columns: 1fr; }
-    .link { flex-direction: row; text-align: left; padding: 18px; gap: 14px; }
-    .link .ic { margin: 0; flex: none; width: 48px; height: 48px; }
-    .link .go { display: none; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    .scroll-cue::after { animation: none; }
-    .feat, .link, .btn { transition: none; }
-  }
-</style>
+<link rel="stylesheet" href="site.css">
 </head>
 <body>
 
@@ -225,7 +30,8 @@
     <a class="brand" href="#top">小樹放置天堂</a>
     <div class="nav-links">
       <a href="#features">遊戲特色</a>
-      <a href="#classes">職業介紹</a>
+      <a href="zones.html">獵場列表</a>
+      <a href="monsters.html">怪物掉落</a>
       <a href="#join">加入社群</a>
     </div>
     <a class="btn btn-gold" href="https://test.xiaoshu.gg/play/" target="_blank" rel="noopener">進入遊戲</a>
@@ -300,6 +106,29 @@
     </div>
   </section>
 
+  <section id="guide">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="en">ADVENTURE GUIDE</div>
+        <h2>冒險資料</h2>
+        <svg class="orn"><use href="#orn"/></svg>
+        <p>出發前先查一查：哪裡練功、打什麼掉什麼</p>
+      </div>
+      <div class="guides">
+        <a class="guide-card" href="zones.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>
+          <div><h3>獵場列表</h3><p>目前開放的野外與地監<span data-count="zones"></span>，每一區出沒的怪物與等級</p></div>
+          <span class="go">查看 ›</span>
+        </a>
+        <a class="guide-card" href="monsters.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4.5 0 8 3.2 8 7.5 0 2.6-1.3 4.4-3 5.5V20h-3v-2h-4v2H7v-4c-1.7-1.1-3-2.9-3-5.5C4 6.2 7.5 3 12 3z"/><circle cx="9" cy="10.5" r="1.5"/><circle cx="15" cy="10.5" r="1.5"/></svg>
+          <div><h3>怪物掉落</h3><p><span data-count="mobs">每隻</span>怪物的能力與掉落道具，也能用道具名反查</p></div>
+          <span class="go">查看 ›</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <section class="join" id="join">
     <div class="wrap">
       <div class="sec-head">
@@ -352,6 +181,15 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   })();
+</script>
+<script src="data/wiki.js" defer></script>
+<script>
+  // 冒險資料卡片填入目前開放的獵場/怪物數(資料讀不到就維持原本的文字)
+  window.addEventListener('DOMContentLoaded', function () {
+    var W = window.WIKI; if (!W) return;
+    var n = { zones: '(共 ' + W.zones.length + ' 區)', mobs: Object.keys(W.mobs).length + ' 種' };
+    document.querySelectorAll('[data-count]').forEach(function (el) { el.textContent = n[el.dataset.count]; });
+  });
 </script>
 </body>
 </html>

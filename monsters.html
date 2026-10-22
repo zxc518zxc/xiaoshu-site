@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>怪物掉落|小樹放置天堂</title>
+<meta name="description" content="小樹放置天堂目前開放區域的怪物能力、出沒地點與掉落道具，也能用道具名反查。">
+<meta name="theme-color" content="#0d0a06">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0a06'/%3E%3Ccircle cx='32' cy='26' r='17' fill='%23c9a24a'/%3E%3Crect x='28' y='38' width='8' height='18' rx='3' fill='%238a5a34'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="orn" viewBox="0 0 220 14"><path d="M0 7h92M128 7h92" stroke="#b98d3e" stroke-width="1"/><path d="M110 1l6 6-6 6-6-6z" fill="none" stroke="#e6c278" stroke-width="1.2"/><circle cx="96" cy="7" r="1.6" fill="#b98d3e"/><circle cx="124" cy="7" r="1.6" fill="#b98d3e"/></symbol>
+  </defs>
+</svg>
+
+<nav class="nav solid-always">
+  <div class="wrap">
+    <a class="brand" href="index.html">小樹放置天堂</a>
+    <div class="nav-links">
+      <a href="index.html#features">遊戲特色</a>
+      <a href="zones.html">獵場列表</a>
+      <a href="monsters.html" class="on">怪物掉落</a>
+      <a href="index.html#join">加入社群</a>
+    </div>
+    <a class="btn btn-gold" href="https://test.xiaoshu.gg/play/" target="_blank" rel="noopener">進入遊戲</a>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="en">MONSTERS &amp; DROPS</div>
+      <h1>怪物掉落</h1>
+      <svg class="orn"><use href="#orn"/></svg>
+      <p>打什麼掉什麼，也能輸入道具名反查哪隻怪會掉</p>
+    </div>
+    <div class="subtabs"><a href="zones.html">獵場列表</a><a href="monsters.html" class="on">怪物掉落</a></div>
+  </div>
+</header>
+
+<main class="data-sec">
+  <div class="wrap">
+    <div class="toolbar">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="q" type="search" placeholder="搜尋怪物名，或輸入道具名找哪隻怪會掉" autocomplete="off">
+      </label>
+      <div class="chips" id="chips"></div>
+    </div>
+    <p class="result-note" id="note"></p>
+    <div class="cards" id="list"></div>
+    <div class="data-note" id="foot"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap"><span class="brand">小樹放置天堂</span>© 2026 小樹放置天堂 版權所有</div>
+</footer>
+
+<script src="data/wiki.js"></script>
+<script>
+(function () {
+  var W = window.WIKI;
+  var list = document.getElementById('list');
+  if (!W) { list.innerHTML = '<p class="empty">資料載入失敗，請重新整理頁面。</p>'; return; }
+  var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
+  var zoneName = {};
+  W.zones.forEach(function (z) { zoneName[z.id] = z.n; });
+  var zoneOrder = {};
+  W.zones.forEach(function (z, i) { zoneOrder[z.id] = i; });
+  var mobs = Object.keys(W.mobs).map(function (k) { return W.mobs[k]; })
+    .sort(function (a, b) { return a.lv - b.lv || a.n.localeCompare(b.n, 'zh-Hant'); });
+
+  var FILTERS = [
+    ['all', '全部', function () { return true; }],
+    ['1', 'Lv 1~10', function (m) { return m.lv <= 10; }],
+    ['2', 'Lv 11~20', function (m) { return m.lv > 10 && m.lv <= 20; }],
+    ['3', 'Lv 21~30', function (m) { return m.lv > 20 && m.lv <= 30; }],
+    ['4', 'Lv 31 以上', function (m) { return m.lv > 30; }],
+    ['boss', 'BOSS', function (m) { return m.boss; }],
+  ];
+  var state = { f: 'all', q: '' };
+
+  var chips = document.getElementById('chips');
+  chips.innerHTML = FILTERS.map(function (f) { return '<button class="chip" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('');
+  chips.addEventListener('click', function (e) {
+    var b = e.target.closest('.chip'); if (!b) return;
+    state.f = b.dataset.f; render();
+  });
+  var q = document.getElementById('q');
+  q.addEventListener('input', function () { state.q = q.value.trim(); render(); });
+
+  function card(m) {
+    var hitDrop = state.q && m.n.indexOf(state.q) < 0;
+    var where = m.z.slice().sort(function (a, b) { return zoneOrder[a] - zoneOrder[b]; }).map(function (id) {
+      return '<a class="tag" href="zones.html#z=' + encodeURIComponent(id) + '">' + esc(zoneName[id] || id) + '</a>';
+    }).join('');
+    var drops = m.d.length ? m.d.map(function (d) {
+      return '<span class="tag' + (hitDrop && d.indexOf(state.q) >= 0 ? ' mark' : '') + '">' + esc(d) + '</span>';
+    }).join('') : '<span class="tag">無掉落道具</span>';
+    return '<div class="dcard" id="m-' + esc(m.n) + '">' +
+      '<h3>' + esc(m.n) + (m.boss ? ' <span class="boss-badge">BOSS</span>' : '') + '</h3>' +
+      '<div class="stats">' +
+        '<div><span>等級</span><b>' + esc(m.lvs) + '</b></div>' +
+        '<div><span>HP</span><b>' + esc(m.hp) + '</b></div>' +
+        '<div><span>AC</span><b>' + esc(m.ac) + '</b></div>' +
+        '<div><span>經驗</span><b>' + esc(m.exp) + '</b></div>' +
+        '<div><span>屬性</span><b>' + esc(m.e) + '</b></div>' +
+      '</div>' +
+      '<div class="lbl">出沒地點</div><div class="tags">' + where + '</div>' +
+      '<div class="lbl">掉落道具</div><div class="tags">' + drops + '</div></div>';
+  }
+
+  function render() {
+    chips.querySelectorAll('.chip').forEach(function (b) { b.classList.toggle('on', b.dataset.f === state.f); });
+    var fn = FILTERS.filter(function (f) { return f[0] === state.f; })[0][2];
+    var ms = mobs.filter(function (m) {
+      if (!fn(m)) return false;
+      if (!state.q) return true;
+      return m.n.indexOf(state.q) >= 0 || m.d.some(function (d) { return d.indexOf(state.q) >= 0; }) ||
+        m.z.some(function (id) { return (zoneName[id] || '').indexOf(state.q) >= 0; });
+    });
+    document.getElementById('note').textContent = '找到 ' + ms.length + ' 種怪物' + (state.q ? '(怪物名、掉落道具或出沒地點含「' + state.q + '」)' : '');
+    list.innerHTML = ms.length ? ms.map(card).join('') : '<p class="empty">找不到符合的怪物或道具</p>';
+  }
+
+  document.getElementById('foot').innerHTML = '資料更新於 ' + esc(W.at) + '，只列目前開放區域會出現的怪物。<br>掉落道具只列出「會掉什麼」，掉落機率不公開；同名但不同等級的怪物合併成一筆，數值以範圍表示。';
+
+  // 從獵場頁點怪物名過來:#m=怪物名 → 直接搜尋牠
+  function fromHash() {
+    var h = location.hash.match(/^#m=(.+)$/);
+    if (h) { state.q = decodeURIComponent(h[1]); q.value = state.q; state.f = 'all'; }
+    render();
+    if (h) {
+      var el = document.getElementById('m-' + state.q);
+      if (el) { el.classList.add('hit'); el.scrollIntoView({ block: 'center' }); }
+    }
+  }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+})();
+</script>
+</body>
+</html>
