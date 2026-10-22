@@ -249,6 +249,36 @@ a.tag:hover { border-color: var(--gold); color: var(--gold); }
 .mname a:hover, .mname a.mark { color: var(--gold); }
 .mname .lv { font-size: 12.5px; color: var(--text-faint); }
 .mrow .none { color: var(--text-faint); font-size: 13px; padding-top: 3px; }
+/* 獵場頁「即將開放」:上鎖的神祕卡片(只有名稱與層數) */
+.soon-hd { color: #c9b07a; }
+.soon-lead { color: var(--text-soft); font-size: 14.5px; margin: -4px 0 16px; font-family: var(--serif); letter-spacing: .04em; }
+.soon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.soon-card {
+  position: relative; overflow: hidden; text-align: center; padding: 22px 14px 18px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201,162,74,.12), transparent 70%), linear-gradient(180deg, #15100a, #0c0805);
+  border: 1px dashed rgba(201,162,74,.38); border-radius: 6px;
+  transition: border-color .25s, box-shadow .25s, transform .25s;
+}
+.soon-card::before {
+  content: "?"; position: absolute; right: -6px; bottom: -34px; font-family: var(--serif); font-weight: 900;
+  font-size: 120px; line-height: 1; color: rgba(201,162,74,.06); pointer-events: none;
+}
+.soon-card:hover { border-color: rgba(230,194,120,.75); box-shadow: 0 0 26px rgba(230,194,120,.14); transform: translateY(-3px); }
+.soon-card svg { width: 30px; height: 30px; color: var(--gold-2); margin-bottom: 6px; }
+.soon-n { font-family: var(--serif); font-weight: 900; font-size: 19px; letter-spacing: .1em; color: var(--text); }
+.soon-sub { font-size: 12.5px; color: var(--text-faint); margin: 2px 0 10px; letter-spacing: .06em; }
+.soon-q { font-size: 13px; color: var(--text-soft); }
+.soon-q b { color: var(--gold); letter-spacing: .2em; }
+.soon-card.big { grid-column: 1 / -1; padding: 30px 16px 26px; border-style: solid; border-color: rgba(230,194,120,.55);
+  background: radial-gradient(ellipse at 50% 0%, rgba(230,180,90,.22), transparent 65%), linear-gradient(180deg, #1d150b, #0c0805); }
+.soon-card.big::before { content: "100"; font-size: 150px; right: 10px; bottom: -40px; color: rgba(201,162,74,.07); }
+.soon-card.big svg { width: 38px; height: 38px; color: var(--gold); }
+.soon-card.big .soon-n { font-size: 28px; letter-spacing: .3em; background: linear-gradient(180deg, #fbe7b0, #d6a548); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.soon-kicker { font-size: 12px; letter-spacing: .5em; color: var(--gold-2); margin: 2px 0 4px; }
+.soon-tag {
+  display: inline-block; margin-top: 12px; padding: 3px 12px; border-radius: 999px; font-size: 12px; letter-spacing: .12em;
+  color: var(--gold); border: 1px solid var(--gold-dim); background: rgba(230,194,120,.06);
+}
 .empty { text-align: center; color: var(--text-faint); padding: 40px 0; }
 .data-note { margin-top: 30px; color: var(--text-faint); font-size: 13px; line-height: 1.9; border-top: 1px solid rgba(201,162,74,.12); padding-top: 18px; }
 
