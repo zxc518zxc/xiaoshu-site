@@ -25,18 +25,8 @@
   </defs>
 </svg>
 
-<nav class="nav" id="nav">
-  <div class="wrap">
-    <a class="brand" href="#top">小樹放置天堂</a>
-    <div class="nav-links">
-      <a href="#features">遊戲特色</a>
-      <a href="zones.html">獵場列表</a>
-      <a href="monsters.html">怪物掉落</a>
-      <a href="#join">加入社群</a>
-    </div>
-    <a class="btn btn-gold" href="https://test.xiaoshu.gg/play/" target="_blank" rel="noopener">進入遊戲</a>
-  </div>
-</nav>
+<nav class="nav" id="nav" data-hero></nav>
+<script src="nav.js"></script>
 
 <header class="hero" id="top">
   <div class="wrap">
@@ -112,18 +102,44 @@
         <div class="en">ADVENTURE GUIDE</div>
         <h2>冒險資料</h2>
         <svg class="orn"><use href="#orn"/></svg>
-        <p>出發前先查一查：哪裡練功、打什麼掉什麼</p>
+        <p>出發前先查一查：怎麼開始、各系統怎麼用、哪裡練功、打什麼掉什麼</p>
       </div>
-      <div class="guides">
+      <div class="guides more">
+        <a class="guide-card" href="guide.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h6M8 11h6"/></svg>
+          <div><h3>新手指南</h3><p>創角、選職業、第一步怎麼練</p></div>
+        </a>
+        <a class="guide-card" href="systems.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
+          <div><h3>系統介紹</h3><p>倉庫、卡片、自動練功、離線掛機</p></div>
+        </a>
+        <a class="guide-card" href="skills.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 6.6L21 9l-5.2 4.2L17.6 20 12 16.3 6.4 20l1.8-6.8L3 9l6.6-.4z"/></svg>
+          <div><h3>技能介紹</h3><p>各職業魔法、學習等級與技能書</p></div>
+        </a>
+        <a class="guide-card" href="enhance.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6M16 16l4 4M19 21l2-2"/></svg>
+          <div><h3>裝備強化</h3><p>卷軸、安定值、刻印裝備規則</p></div>
+        </a>
+        <a class="guide-card" href="pets.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="9" r="2"/><circle cx="9.5" cy="5" r="2"/><circle cx="14.5" cy="5" r="2"/><circle cx="19" cy="9" r="2"/><path d="M12 11c-3 0-6 4.5-6 7a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3c0-2.5-3-7-6-7z"/></svg>
+          <div><h3>召喚與寵物</h3><p>帶寵物、召喚術與魅力的隱藏加成</p></div>
+        </a>
+        <a class="guide-card" href="events.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1.5S10 8 12 8zM12 8c2-4 6-4 6-1.5S14 8 12 8z"/></svg>
+          <div><h3>活動</h3><p>進行中的活動與新手福利</p></div>
+        </a>
+        <a class="guide-card" href="changelog.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l14-6v14L3 13z"/><path d="M7 13v5a2 2 0 0 0 4 0v-3.5"/><path d="M20 9v6"/></svg>
+          <div><h3>更新日誌</h3><p>最近新增與調整了什麼</p></div>
+        </a>
         <a class="guide-card" href="zones.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>
-          <div><h3>獵場列表</h3><p>目前開放的野外與地監<span data-count="zones"></span>，每一區的怪物與掉落道具一次看完</p></div>
-          <span class="go">查看 ›</span>
+          <div><h3>獵場列表</h3><p>開放中的野外與地監<span data-count="zones"></span></p></div>
         </a>
         <a class="guide-card" href="monsters.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4.5 0 8 3.2 8 7.5 0 2.6-1.3 4.4-3 5.5V20h-3v-2h-4v2H7v-4c-1.7-1.1-3-2.9-3-5.5C4 6.2 7.5 3 12 3z"/><circle cx="9" cy="10.5" r="1.5"/><circle cx="15" cy="10.5" r="1.5"/></svg>
-          <div><h3>怪物掉落</h3><p><span data-count="mobs">每隻</span>怪物的能力與掉落道具，也能用道具名反查</p></div>
-          <span class="go">查看 ›</span>
+          <div><h3>怪物掉落</h3><p><span data-count="mobs">每隻</span>怪物的掉落，可用道具名反查</p></div>
         </a>
       </div>
     </div>
@@ -174,14 +190,6 @@
   <div class="wrap"><span class="brand">小樹放置天堂</span>© 2026 小樹放置天堂 版權所有</div>
 </footer>
 
-<script>
-  (function () {
-    var nav = document.getElementById('nav');
-    function onScroll() { nav.classList.toggle('solid', window.scrollY > 40); }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  })();
-</script>
 <script src="data/wiki.js" defer></script>
 <script>
   // 冒險資料卡片填入目前開放的獵場/怪物數(資料讀不到就維持原本的文字)
