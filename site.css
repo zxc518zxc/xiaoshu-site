@@ -283,6 +283,29 @@ a.tag:hover { border-color: var(--gold); color: var(--gold); }
 .mname a:hover, .mname a.mark { color: var(--gold); }
 .mname .lv { font-size: 12.5px; color: var(--text-faint); }
 .mrow .none { color: var(--text-faint); font-size: 13px; padding-top: 3px; }
+/* 💤 可離線掛機(放置獵場) */
+.afk-badge { display: inline-flex; align-items: center; gap: 4px; font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .08em; color: #cfe6ff; background: rgba(70,110,170,.3); border: 1px solid rgba(120,170,230,.6); padding: 1px 8px; border-radius: 999px; }
+.afk-badge svg { width: 12px; height: 12px; }
+.znote.afk { border-left-color: #7fb0e6; background: rgba(110,160,220,.08); }
+.znote.afk b { color: #cfe6ff; }
+.afk-banner { display: flex; align-items: center; gap: 14px; width: 100%; margin: 4px 0 8px; padding: 14px 18px; text-align: left; cursor: pointer; font: inherit; color: var(--text-soft);
+  background: linear-gradient(90deg, rgba(60,95,150,.32), rgba(20,16,10,.6)); border: 1px solid rgba(120,170,230,.5); border-radius: 6px; }
+.afk-banner:hover { border-color: #9cc4f0; }
+.afk-banner svg { flex: none; width: 28px; height: 28px; color: #cfe6ff; }
+.afk-banner span { flex: 1; font-size: 14px; line-height: 1.6; }
+.afk-banner span b { display: block; font-size: 16px; color: #e3f0ff; }
+.afk-banner em { flex: none; font-style: normal; font-weight: 700; color: #cfe6ff; white-space: nowrap; }
+.afk-rules { margin: 0 0 16px; padding: 14px 18px 14px 34px; line-height: 1.9; font-size: 14.5px; color: var(--text-soft); background: linear-gradient(180deg, #1b140c, #120d07); border: 1px solid rgba(201,162,74,.22); border-left: 3px solid #7fb0e6; border-radius: 6px; }
+.afk-rules b { color: #cfe6ff; }
+.hunts { padding: 6px 20px 8px; background: linear-gradient(180deg, #1b140c, #120d07); border: 1px solid rgba(201,162,74,.22); border-radius: 6px; }
+.hhead, .hrow { display: grid; grid-template-columns: 270px 90px 1fr; gap: 14px; }
+.hhead { padding: 8px 0; font-size: 12px; letter-spacing: .2em; color: var(--gold-2); border-bottom: 1px solid rgba(201,162,74,.22); }
+.hrow { padding: 11px 0; border-bottom: 1px solid rgba(201,162,74,.09); align-items: start; }
+.hrow:last-child { border-bottom: 0; }
+.hn { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.hn b { font-size: 15.5px; color: var(--text); }
+.hn b.mark { color: var(--gold); }
+.hlv { font-size: 14px; color: var(--gold); font-weight: 700; padding-top: 2px; }
 /* 獵場頁「即將開放」:上鎖的神祕卡片(只有名稱與層數) */
 .soon-hd { color: #c9b07a; }
 .soon-lead { color: var(--text-soft); font-size: 14.5px; margin: -4px 0 16px; font-family: var(--serif); letter-spacing: .04em; }
@@ -368,6 +391,10 @@ a.tag:hover { border-color: var(--gold); color: var(--gold); }
   .guides.more { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 720px) {
+  .hhead { display: none; }
+  .hrow { grid-template-columns: 1fr auto; }
+  .hrow .tags { grid-column: 1 / -1; }
+  .hunts { padding: 4px 14px 6px; }
   .doc .sec { padding: 18px 16px; }
   .hero { background-image: url(img/hero-m.webp); background-position: center 30%; padding: 84px 0 96px; }
   .logo { width: min(250px, 66vw); }
